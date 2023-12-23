@@ -1,6 +1,12 @@
 package net.greeta.video.controller.video;
 
-import net.greeta.video.controller.constraint.auth.AuthenticatedApi;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import net.greeta.video.data.UserDetail;
 import net.greeta.video.data.video.CreateRequest;
 import net.greeta.video.data.video.TsRequest;
@@ -9,15 +15,6 @@ import net.greeta.video.data.video.VideoRequest;
 import net.greeta.video.exception.DoesNotExist;
 import net.greeta.video.service.video.VideoService;
 import net.greeta.video.utils.AuthUtil;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import java.util.UUID;
-import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -30,14 +27,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.util.UUID;
+
 @Controller
 @RequestMapping(path = "/api/video") // path prefix
 public class VideoController {
   @Autowired
   VideoService videoService;
 
-  @AuthenticatedApi
-  @SecurityRequirement(name = "jwt")
   @Operation(description = "create video from file")
   @ApiResponses(
       value = {

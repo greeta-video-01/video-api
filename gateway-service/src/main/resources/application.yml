@@ -10,6 +10,12 @@ spring:
     name: gateway
   lifecycle:
     timeout-per-shutdown-phase: 15s
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
   cloud:
     bootstrap:
       enabled: true

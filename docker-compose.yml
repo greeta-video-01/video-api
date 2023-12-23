@@ -16,11 +16,19 @@ services:
     networks:
       - video
 
+  video-redis:
+    image: "redis:7.0"
+    container_name: "video-redis"
+    ports:
+      - 6370:6370
+    networks:
+      - video
+
   keycloak-postgres:
     image: postgres:15.3
     container_name: keycloak_postgres
     ports:
-      - "5433:5433"
+      - "5435:5435"
     environment:
       - POSTGRES_DB=keycloak
       - POSTGRES_USER=keycloak
@@ -41,7 +49,7 @@ services:
       - KC_DB_URL_DATABASE=keycloak
       - KC_DB_USERNAME=keycloak
       - KC_DB_PASSWORD=password
-      - KC_DB_PORT=5433
+      - KC_DB_PORT=5435
       - KC_HEALTH_ENABLED=true
     ports:
       - "8080:8080"
@@ -69,12 +77,14 @@ services:
     container_name: video-db
     hostname: video-db
     environment:
-      POSTGRES_PASSWORD: root_password  # please change it
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: spring-video
+      PGPORT: 5433
     volumes:
       - ./volumes/postgresql/video-db:/var/lib/postgresql/data
     ports:
-      - 5433:5432
+      - 5433:5433
     networks:
       - video
 
@@ -83,12 +93,13 @@ services:
     container_name: worker-db
     hostname: worker-db
     environment:
-      POSTGRES_PASSWORD: root_password  # please change it
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: spring-worker
+      PGPORT: 5434
     volumes:
       - ./volumes/postgresql/worker-db:/var/lib/postgresql/data
     ports:
-      - 5434:5432
+      - 5434:5434
     networks:
       - video
 
@@ -98,14 +109,14 @@ services:
     hostname: video-minio
     restart: always
     ports:
-      - 8999:8999 # api
-      - 8998:8998 # ui
+      - 8086:8086 # api
+      - 8087:8087 # ui
     environment:
       MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: root_password  # please change it
+      MINIO_ROOT_PASSWORD: minio_password
     volumes:
       - ./volumes/minio/data:/data
-    command: server --console-address ':8998' /data
+    command: server --address ":8086" --console-address ":8087" /data
     networks:
       - video
 

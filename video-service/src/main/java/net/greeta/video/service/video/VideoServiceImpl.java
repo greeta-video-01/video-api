@@ -6,7 +6,6 @@ import net.greeta.video.config.StreamConfig;
 import net.greeta.video.data.video.VideoProfile;
 import net.greeta.video.exception.DoesNotExist;
 import net.greeta.video.models.User;
-import com.joejoe2.video.models.video.*;
 import net.greeta.video.models.video.*;
 import net.greeta.video.repository.VideoEventResultRepository;
 import net.greeta.video.repository.user.UserRepository;

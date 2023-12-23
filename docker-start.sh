@@ -4,13 +4,13 @@ docker-compose up -d
 
 mvn clean install -DskipTests
 
-cd ./order-service
+cd ./video-service
 mvn spring-boot:build-image -DskipTests \
-  -Dspring-boot.build-image.imageName=order-service
+  -Dspring-boot.build-image.imageName=video-service
 
-cd ../image-gateway-service
+cd ../worker-service
 mvn spring-boot:build-image -DskipTests \
-  -Dspring-boot.build-image.imageName=image-gateway-service
+  -Dspring-boot.build-image.imageName=worker-service
 
 cd ../gateway-service
 mvn spring-boot:build-image -DskipTests \

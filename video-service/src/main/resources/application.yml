@@ -14,28 +14,27 @@ spring:
   lifecycle:
     timeout-per-shutdown-phase: 15s
 
-  redis:
-    host: video-redis
-    port: 6370
+  data:
+    redis:
+      host: video-redis
+      port: 6370
 
   servlet:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
 
-  datasource:
-    url: jdbc:postgresql://video-db:5433/spring-video
-    username: postgres
-    password: pa55ward
-    driver-class-name: org.postgresql.Driver
   jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        hbm2ddl:
-          auto: update
     open-in-view: false
-
+    hibernate:
+      ddl-auto: update
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://video-db:5433/spring-video
+    hikari:
+      connection-timeout: 2000 #ms
+      maximum-pool-size: 5
 
   keycloak:
     server-url: http://localhost:8080
@@ -103,14 +102,14 @@ openapi:
 
 # kafka related settings
 kafka:
-  bootstrapServers: localhost:9092
+  bootstrapServers: "video-kafka1:29092,video-kafka2:29093"
 
 
 # minio related settings
 minio:
   access-key: minio
-  secret-key: pa55ward
-  url: http://video-minio:9001
+  secret-key: minio_password
+  url: http://video-minio:8086
   bucket:
     store: video
     stream: stream

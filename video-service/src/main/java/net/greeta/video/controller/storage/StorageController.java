@@ -1,14 +1,12 @@
 package net.greeta.video.controller.storage;
 
-import net.greeta.video.controller.constraint.auth.AuthenticatedApi;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import net.greeta.video.data.UserDetail;
 import net.greeta.video.data.storage.UploadRequest;
 import net.greeta.video.service.storage.ObjectStorageService;
 import net.greeta.video.utils.AuthUtil;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +21,6 @@ public class StorageController {
   @Autowired
   ObjectStorageService objectStorageService;
 
-  @AuthenticatedApi
-  @SecurityRequirement(name = "jwt")
   @Operation(description = "upload video file")
   @ApiResponses
   @RequestMapping(
