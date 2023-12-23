@@ -1,0 +1,60 @@
+version: "3.8"
+
+networks:
+  video:
+    driver: bridge
+
+services:
+  video:
+    image: "video-service"
+    container_name: "video"
+    ports:
+      - 9001:9001
+      - 8001:8001
+    environment:
+      - SERVER_PORT=9001
+      - BPL_JVM_THREAD_COUNT=50
+      - BPL_DEBUG_ENABLED=true
+      - BPL_DEBUG_PORT=8001
+      - SPRING_KEYCLOAK_SERVER_URL=http://video-keycloak:8080
+      - SPRING_KEYCLOAK_SERVER_EXTERNAL_URL=http://localhost:8080
+      - ZIPKIN_HOST=zipkin
+    networks:
+      - video
+
+  worker:
+    image: "worker-service"
+    container_name: "worker"
+    ports:
+      - 9002:9002
+      - 8002:8002
+    environment:
+      - SERVER_PORT=9002
+      - BPL_JVM_THREAD_COUNT=50
+      - BPL_DEBUG_ENABLED=true
+      - BPL_DEBUG_PORT=8002
+      - SPRING_KEYCLOAK_SERVER_URL=http://video-keycloak:8080
+      - SPRING_KEYCLOAK_SERVER_EXTERNAL_URL=http://localhost:8080
+      - ZIPKIN_HOST=zipkin
+    networks:
+      - video
+
+
+  gateway:
+    image: "gateway-service"
+    container_name: "gateway"
+    ports:
+      - 9000:9000
+      - 8000:8000
+    environment:
+      - SERVER_PORT=9000
+      # Buildpacks environment variable to enable debug through a socket on port 8000
+      - BPL_DEBUG_ENABLED=true
+      - BPL_DEBUG_PORT=8000
+      - VIDEO_SERVICE_URL=http://video:9001
+      - SPRING_REDIS_HOST=gateway-redis
+      - SPRING_REDIS_PORT=6380
+      - SPRING_KEYCLOAK_SERVER_URL=http://video-keycloak:8080
+      - SPRING_KEYCLOAK_SERVER_EXTERNAL_URL=http://localhost:8080
+    networks:
+      - video
