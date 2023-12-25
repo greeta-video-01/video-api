@@ -1,4 +1,4 @@
-#provide service name as a script parameter. For example: product
+#provide service name as a script parameter. For example: video
 
 docker-compose -f docker-app-compose.yml down
 

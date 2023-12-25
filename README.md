@@ -1,32 +1,29 @@
 ### 📖 Full-Stack Templates For Spring Boot Developers
 
-#### ✅ Brand Shop UI with React, Angular, Netflix DGS GraphQL, Minio Image Upload and Resizing Server, Spring Security WebSockets and Keycloak Authorization Server
-#### ✅ eCommerce Platform with Axon Event Sourcing CQRS, MongoDB Event Store and Kafka Event Streaming
+#### ✅ Video Streaming Platform with Debezium CDC Kafka Connector, Kafka Event Streaming, Minio File Storage and FFmpeg Video Processing
 
 <ul style="list-style-type:disc">
     <li>📖 This <b>Full-Stack Developer Template</b> provides fully functional Development Environment:</li>
-    <li>📖 <b>Event-Driven Spring Boot Microservices</b> with Axon Event Sourcing CQRS, MongoDB Event Store and Kafka Event Streaming</li>
+    <li>📖 <b>Event-Driven Spring Boot Microservices</b> with Debezium Change Data Capture, Debezium Kafka Connector and Kafka Event Streaming</li>
     <li>📖 <b>Swagger UI Gateway</b> with Keycloak Authorization</li>
-    <li>📖 <b>React And Angular UI</b> with Netflix DGS GraphQL, Minio Image Upload and Resizing Server, Keycloak Authorization and Secured Websockets</li>
+    <li>📖 <b>Video Streaming API</b> with Minio File Storage, PostgreSQL Event and Metadata Persistence, Redis Cache Manager, Debezium Change Data Capture and FFmpeg Video Processing</li>
+    <li>📖 Custom <b>Spring Boot Docker Image</b> with pre-installed FFmpeg Video Processing Tool</li>
     <li>📖 Local <b>Docker</b> Development Environment</li>
   <li>📖 Full <b>Technology Stack</b>:</li>
   <ul>
     <li>✅ <b>Swagger UI Gateway</b></li>
-    <li>✅ <b>React UI</b></li>
-    <li>✅ <b>Angular UI</b></li>
-    <li>✅ <b>Netflix DGS GraphQL</b></li>
-    <li>✅ <b>Minio Image Upload and Resizing Server</b></li>
+    <li>✅ <b>Debezium PostgreSQL Change Data Capture</b></li>
+    <li>✅ <b>PostgreSQL Event and Metadata Persistence</b></li>
+    <li>✅ <b>Debezium Kafka Connector</b></li>
+    <li>✅ <b>Minio File Storage Server</b></li>
+    <li>✅ <b>Redis Cache Manager</b></li>
     <li>✅ <b>Spring Boot 3</b></li>
     <li>✅ <b>Spring Cloud Gateway</b></li>
-    <li>✅ <b>Spring Security Websockets</b></li>
-    <li>✅ <b>Secured Websockets Messaging with JWT</b></li>
+    <li>✅ <b>Kafka Transactional Event Streaming</b></li>
+    <li>✅ <b>FFmpeg Video Processing Tool</b></li>
     <li>✅ <b>Event-Driven Microservices</b></li>
-    <li>✅ <b>Axon Event Sourcing</b></li>
-    <li>✅ <b>MongoDB Event Store</b></li>
-    <li>✅ <b>Kafka Event Streaming</b></li>
-    <li>✅ <b>Axon CQRS</b></li>
-    <li>✅ <b>Axon Saga Transactions</b></li>
-    <li>✅ <b>CQRS Query Projection with PostgreSQL Database</b></li>
+    <li>✅ <b>Kafka Event Store</b></li>
+    <li>✅ <b>Kafka UI</b></li>
     <li>✅ <b>Keycloak Oauth2 Authorization Server</b></li>
     <li>✅ <b>Local Docker Environment</b></li>
     <li>✅ <b>Remote Debugging</b></li>
@@ -36,13 +33,9 @@
 
 ### 📖 Links
 
-UI Repository is available Here: [Eshop UI](https://github.com/greeta-eshop-01/eshop-ui)
+See original spring-video HLS video streaming application: [Spring Video](https://github.com/joejoe2/spring-video)
 
-Spring Boot API Repository is available Here: [Eshop API](https://github.com/greeta-eshop-01/eshop-api)
-
-See original eShop Code for Full-Stack Template with Gradle + React and Angular UI: [Original eShop](https://github.com/hdimitrieski/e-shop)
-
-See previous Spring Boot Template for AWS Setup: [Twitter Kafka Analytics Platform](https://github.com/greeta-twitter-01/twitter-api)
+See previous Spring Boot Template for AWS Setup Example: [Twitter Kafka Analytics Platform](https://github.com/greeta-twitter-01/twitter-api)
 
 ### 📖 Step By Step Guide
 
@@ -61,69 +54,60 @@ sh docker-restart.sh
 - this script will restart all docker containers without rebuilding images
 
 ```
-sh docker-app-restart.sh order-processing
+sh docker-app-restart.sh video
 ```
 
-- this script will rebuild spring boot docker image for `order-processing` application and restart application with rebuilt image
-- replace `order-processing` with the name of the application you want to rebuild and restart
-
-
-#### React and Angular UI setup:
-
-UI Repository is available Here: [Eshop UI](https://github.com/greeta-eshop-01/eshop-ui)
-
-- `ng-rest-client` Setup:
+- this script will rebuild spring boot docker image for `video` application and restart application with rebuilt image
+- replace `video` with the name of the application you want to rebuild and restart
 
 ```
-export NODE_OPTIONS=--openssl-legacy-provider
-npm install
-ng serve
+sh docker-worker-restart.sh
 ```
 
-- `react-graphql-client` Setup:
-
-```
-npm install
-npm start
-```
+- this script will rebuild spring boot docker image for `worker` application and restart application with rebuilt image
+- `worker` uses custom Dockerfile image to pre-install FFmpeg Tool. Therefore, it should be rebuilt with custom script
+- actual rebuild of `worker` docker image happens in `docker-app-compose.yml` file (see `build: "./worker-service"`)
 
 
 #### Local Docker Environment Acceptance Test:
 
-- open http://localhost:9000 in your Browser and switch between Swagger UI Pages
+1. run `sh docker-start.sh`
 
-- For authorized requests: click `Authorize` and use `admin/admin` or `user/user` for credentials (`clientId` should be `stock-app`)
+2. run commands in `./command.txt` (Debezium Kafka PostgreSQL connectors)
 
-- open http://localhost:4200 in your Browser and test Angular UI 
+3. open http://localhost:9000 in your Browser
 
-- open http://localhost:4201 in your Browser and test React GraphQL UI
+- For authorized requests: click `Authorize` and use `admin/admin` or `user/user` for credentials (`clientId` should be `video-app`)
 
-- Use `admin/admin` or `user/user` for credentials
+4. goto http://localhost:9000/webjars/swagger-ui/index.html#/storage-controller/upload and upload mp4 file (you can use `test.mp4` in `worker-service` folder for testing)
 
-- Make sure that `Keycloak Authorization` and `WebSocket Connections` are working correctly for these pages
+5. goto http://localhost:9000/webjars/swagger-ui/index.html#/video-controller/create and create video with filename from step 4, please copy the video id from response
 
-- Warning! If Swagger UI fails to load on the first try, please, refresh the page!
+6. goto http://localhost:9000/webjars/swagger-ui/index.html#/video-controller/profile with video id and wait for the video status to become READY
 
-- Warning! Sometimes switching between Swagger UI pages doesn't refresh Swagger UI completely and you might see wrong REST endpoints: just refresh the page and continue
+7. use http://localhost:9000/video/api/video/{your_video_id}/index.m3u8 for any HLS player (alternatively, download links in `m3u8` file and open them with any video player)
 
-- Warning! Sometimes REST endpoints return `504 Gateway Timeout`, just retry the REST API endpoint again
 
-- Congratulations! You successfully tested `Swagger UI Gateway`, `Angular UI` and `React GraphQL UI`
+- Congratulations! You successfully tested `Swagger UI Gateway` and `Video Streaming API`!
 
 
 ### Remote Debugging
 
 ![Configuration to debug a containerized Java application from IntelliJ IDEA](documentation/06-14.png)
 
-#### Minio Image Upload and Resizing Server
+#### Minio File Storage Server
 
-- Minio Image Upload and Resizing Server is available here: http://localhost:8086/
+- Minio File Storage Server should be available here: http://localhost:8086/
 
-- Make sure that `customer-images` Bucket exists and contains Brand Product Images
+- If acceptance testing was successful, then `stream` and `video` Buckets should exist and contain video files
 
-- You can download and browse images using this console
+- You can download and browse video files using this console
 
+#### Kafka UI
+
+- Kafka UI should be available here: http://localhost:8070/
+- You can browse topics, partitions, messages and other kafka resources using this console
 
 #### Zipkin Server
 
-- Zipkin Server for Distributed Tracing is available here: http://localhost:9411/
+- Zipkin Server for Distributed Tracing should be available here: http://localhost:9411/
