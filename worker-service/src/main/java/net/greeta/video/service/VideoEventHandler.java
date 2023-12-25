@@ -71,6 +71,8 @@ public class VideoEventHandler {
     try {
       eventDto = objectMapper.readValue(message, EventDto.class);
     } catch (Exception e) {
+      e.printStackTrace();
+      logger.info(e.getMessage());
       throw new RuntimeException("cannot deserialize video event: " + message);
     }
     logger.info(eventDto.getEvent().toString());
@@ -98,7 +100,7 @@ public class VideoEventHandler {
     // process
     File tempDir;
     try {
-      tempDir = Files.createTempDirectory(Path.of("tmp"), "tmp-" + file.getName()).toFile();
+      tempDir = Files.createTempDirectory("tmp-" + file.getName()).toFile();
       FileUtil.deleteDirOnExit(tempDir);
       videoService.convert(file, tempDir);
     } catch (Exception e) {

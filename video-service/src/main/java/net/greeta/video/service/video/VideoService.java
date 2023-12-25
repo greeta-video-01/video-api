@@ -9,7 +9,7 @@ import java.util.UUID;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 public interface VideoService {
-  public VideoProfile createFromObjectStorage(UUID userId, String title, String objectName);
+  public VideoProfile createFromObjectStorage(String userId, String title, String objectName) throws Exception;
 
   StreamingResponseBody m3u8Index(UUID videoId) throws DoesNotExist;
 

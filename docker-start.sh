@@ -8,10 +8,6 @@ cd ./video-service
 mvn spring-boot:build-image -DskipTests \
   -Dspring-boot.build-image.imageName=video-service
 
-cd ../worker-service
-mvn spring-boot:build-image -DskipTests \
-  -Dspring-boot.build-image.imageName=worker-service
-
 cd ../gateway-service
 mvn spring-boot:build-image -DskipTests \
   -Dspring-boot.build-image.imageName=gateway-service

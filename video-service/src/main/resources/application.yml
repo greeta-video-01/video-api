@@ -17,7 +17,8 @@ spring:
   data:
     redis:
       host: video-redis
-      port: 6370
+      port: 6379
+      password: pass
 
   servlet:
     multipart:

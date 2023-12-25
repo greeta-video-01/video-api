@@ -11,11 +11,6 @@ spring:
   lifecycle:
     timeout-per-shutdown-phase: 15s
 
-  servlet:
-    multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
-
   cloud:
     bootstrap:
       enabled: true
@@ -34,23 +29,6 @@ spring:
         - SaveSession
         - TokenRelay
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin Access-Control-Request-Headers, RETAIN_FIRST
-        - name: RequestRateLimiter
-          args:
-            redis-rate-limiter:
-              replenishRate: 10
-              burstCapacity: 20
-              requestedTokens: 1
-        - name: Retry
-          args:
-            retries: 3
-            methods: GET
-            series: SERVER_ERROR
-            exceptions: java.io.IOException, java.util.concurrent.TimeoutException
-            backoff:
-              firstBackoff: 50ms
-              maxBackOff: 500ms
-              factor: 2
-              basedOnPreviousValue: false
       globalcors:
         add-to-simple-url-handler-mapping: true
         corsConfigurations:

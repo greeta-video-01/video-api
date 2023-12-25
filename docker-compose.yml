@@ -19,8 +19,10 @@ services:
   video-redis:
     image: "redis:7.0"
     container_name: "video-redis"
+    environment:
+      REDIS_PASSWORD: pass
     ports:
-      - 6370:6370
+      - 6379:6379
     networks:
       - video
 

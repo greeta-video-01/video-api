@@ -18,7 +18,10 @@ public class AuthUtil {
     if (!isAuthenticated())
       throw new InternalAuthenticationServiceException("has not been authenticated !");
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    return (UserDetail) authentication.getPrincipal();
+    if (authentication.getPrincipal() instanceof UserDetail) {
+      return (UserDetail) authentication.getPrincipal();
+    }
+    return new UserDetail(authentication.getName(), authentication.getName());
   }
 
   public static void setCurrentUserDetail(UserDetail userDetail) {

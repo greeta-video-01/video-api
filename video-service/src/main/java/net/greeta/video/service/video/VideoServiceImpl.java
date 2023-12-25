@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.UUID;
 
+import net.greeta.video.service.user.auth.UserDetailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +47,12 @@ public class VideoServiceImpl implements VideoService {
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public VideoProfile createFromObjectStorage(UUID userId, String title, String objectName) {
-    User user = userRepository.findById(userId).orElseThrow();
+  public VideoProfile createFromObjectStorage(String userName, String title, String objectName) throws Exception {
+    User user = userRepository.getByUserName(userName).orElseThrow();
     Video video = new Video(user, title);
     video = videoRepository.saveAndFlush(video);
     VideoEvent event =
-        new VideoEvent(video.getId().toString(), userId.toString(), Operation.PROCESS);
+        new VideoEvent(video.getId().toString(), user.getId().toString(), Operation.PROCESS);
     event.setSource("minio.bucket.store://" + objectName);
     eventRepository.save(event);
     return new VideoProfile(video);

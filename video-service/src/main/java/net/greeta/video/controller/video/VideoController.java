@@ -13,6 +13,7 @@ import net.greeta.video.data.video.TsRequest;
 import net.greeta.video.data.video.VideoProfile;
 import net.greeta.video.data.video.VideoRequest;
 import net.greeta.video.exception.DoesNotExist;
+import net.greeta.video.service.user.auth.UserDetailService;
 import net.greeta.video.service.video.VideoService;
 import net.greeta.video.utils.AuthUtil;
 import org.springdoc.core.annotations.ParameterObject;
@@ -33,6 +34,8 @@ import java.util.UUID;
 @RequestMapping(path = "/api/video") // path prefix
 public class VideoController {
   @Autowired
+  UserDetailService userDetailService;
+  @Autowired
   VideoService videoService;
 
   @Operation(description = "create video from file")
@@ -47,12 +50,12 @@ public class VideoController {
                     schema = @Schema(implementation = VideoProfile.class))),
       })
   @RequestMapping(path = "/", method = RequestMethod.POST)
-  public ResponseEntity create(@Valid @RequestBody CreateRequest request) {
+  public ResponseEntity create(@Valid @RequestBody CreateRequest request) throws Exception {
     UserDetail user = AuthUtil.currentUserDetail();
+    userDetailService.createUserIfAbsent(user.getUsername());
     String objectName = "user/" + user.getId() + "/" + request.getFileName();
     VideoProfile profile =
-        videoService.createFromObjectStorage(
-            UUID.fromString(user.getId()), request.getTitle(), objectName);
+        videoService.createFromObjectStorage(user.getUsername(), request.getTitle(), objectName);
     return ResponseEntity.ok(profile);
   }
 

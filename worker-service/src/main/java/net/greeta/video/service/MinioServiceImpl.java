@@ -4,6 +4,10 @@ import net.greeta.video.config.MinioConfiguration;
 import io.minio.*;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,21 +36,23 @@ public class MinioServiceImpl implements MinioService {
 
   @Override
   public File downloadObject(String bucket, String objectName, String outputName) throws Exception {
-    try {
-      minioClient.downloadObject(
-          DownloadObjectArgs.builder()
+      try (InputStream stream = minioClient.getObject(
+          GetObjectArgs.builder()
               .bucket(bucket)
               .object(objectName)
-              .filename(outputName)
-              .overwrite(true)
-              .build());
-      File file = new File(outputName);
-      if (!file.exists()) throw new RuntimeException();
-      return file;
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new Exception("cannot retrieve file !");
-    }
+              //.filename(outputName)
+              //.overwrite(true)
+              .build())) {
+        try {
+          File file = Files.createTempFile(outputName, "").toFile();
+          FileUtils.copyInputStreamToFile(stream, file);
+          if (!file.exists()) throw new RuntimeException();
+          return file;
+        } catch (Exception e) {
+          e.printStackTrace();
+          throw new Exception("cannot retrieve file !");
+        }
+      }
   }
 
   @Override

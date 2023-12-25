@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import net.greeta.video.data.UserDetail;
 import net.greeta.video.data.storage.UploadRequest;
 import net.greeta.video.service.storage.ObjectStorageService;
+import net.greeta.video.service.user.auth.UserDetailService;
 import net.greeta.video.utils.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class StorageController {
   @Autowired
   ObjectStorageService objectStorageService;
+  @Autowired
+  UserDetailService userDetailService;
 
   @Operation(description = "upload video file")
   @ApiResponses
@@ -27,8 +30,9 @@ public class StorageController {
       path = "/upload",
       method = RequestMethod.POST,
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity upload(@Valid UploadRequest request) {
+  public ResponseEntity upload(@Valid UploadRequest request) throws Exception {
     UserDetail user = AuthUtil.currentUserDetail();
+    userDetailService.createUserIfAbsent(user.getUsername());
     MultipartFile file = request.getFile();
     String objectName = "user/" + user.getId() + "/" + request.getFileName();
     try {

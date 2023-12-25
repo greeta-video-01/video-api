@@ -24,6 +24,7 @@ services:
 
   worker:
     image: "worker-service"
+    build: "./worker-service"
     container_name: "worker"
     ports:
       - 9002:9002
@@ -33,8 +34,6 @@ services:
       - BPL_JVM_THREAD_COUNT=50
       - BPL_DEBUG_ENABLED=true
       - BPL_DEBUG_PORT=8002
-      - SPRING_KEYCLOAK_SERVER_URL=http://video-keycloak:8080
-      - SPRING_KEYCLOAK_SERVER_EXTERNAL_URL=http://localhost:8080
       - ZIPKIN_HOST=zipkin
     networks:
       - video

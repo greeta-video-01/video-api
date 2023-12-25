@@ -29,11 +29,11 @@ public class UserDetailService implements UserDetailsService {
   }
 
   @Transactional
-  public void createUserIfAbsent(UserDetail userDetail) throws Exception {
-    if (!userRepository.existsById(UUID.fromString(userDetail.getId()))) {
-      User user = new User(UUID.fromString(userDetail.getId()), userDetail.getUsername());
+  public void createUserIfAbsent(String userName) throws Exception {
+    if (!userRepository.existsByUserName(userName)) {
+      User user = new User(UUID.randomUUID(), userName);
       userRepository.save(user);
-      storageService.createFolder("user/" + user.getId() + "/");
+      storageService.createFolder("user/" + user.getUserName() + "/");
     }
   }
 }
